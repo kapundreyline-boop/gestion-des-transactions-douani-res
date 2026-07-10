@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Douanne App - Accueil</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: white; /* ✅ Fond blanc */
+      color: #333; /* Texte plus lisible sur fond blanc */
+      background-image: url(douane.jpg);
+    }
+
+    header {
+      background-color: #2a5298;
+      padding: 15px 0;
+      text-align: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ffd700;
+    }
+
+    .welcome {
+      margin-top: 120px;
+      text-align: center;
+    }
+
+    .welcome h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #2a5298;
+    }
+
+    .welcome p {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      margin: 50px auto;
+      max-width: 1000px;
+    }
+
+    .feature {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-radius: 10px;
+      width: 30%;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .feature:hover {
+      transform: scale(1.05);
+      background-color: #e0e0e0;
+    }
+
+    footer {
+      background-color: #2a5298;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="acceuil.html">Accueil</a></li>
+        <li><a href="declaration.html">Déclarations</a></li>
+        <li><a href="transactions.html">Transactions</a></li>
+        <li><a href="connexion.html">connexion</a></li>
+        <li><a href="tableau de bord.html">tableau de bord</a></li>
+        <li><a href="tarifs.html">Tarifs</a></li>
+        <li><a href="liquidation.html">Liquidation</a></li>
+        <li><a href="administration.html">administration</a></li>
+        <li><a href="parametre.html">configuration</a></li>
+
+      </ul>
+    </nav>
+  </header>
+
+  <section class="welcome">
+    <h1>Bienvenue dans Douanne App</h1>
+    <p>une plateforme conçue pour optimiser l'ensemble des operations douanières.De la declaration des marchandises à la <br> 
+        liquidation automatique des droits et taxes , DouneApp vous accompagne à chaque étape pour reduire vos délais de <br> 
+        dédouanement. <br>
+    </p>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h2>📑 Déclarations simplifiées</h2>
+      <p>Soumettez vos déclarations rapidement et en toute sécurité.</p>
+    </div>
+    <div class="feature">
+      <h2>💰 Transactions sécurisées</h2>
+      <p>Gérez vos paiements et transactions avec transparence.</p>
+    </div>
+    <div class="feature">
+      <h2>📊 Tableau de bord</h2>
+      <p>Suivez vos activités douanières en temps réel.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Douanne App - Tous droits réservés</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const welcome = document.querySelector(".welcome h1");
+      welcome.style.transition = "color 2s";
+      welcome.style.color = "#ffd700";
+    });
+  </script>
+</body>
+</html>
+
+
+
