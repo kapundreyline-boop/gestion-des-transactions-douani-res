@@ -1,1 +1,303 @@
-les transactions sont tres rapides
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Douanne App - Ajouter une Transaction</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #2a5298;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    form {
+      background: #eef;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: #2a5298;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #1e3c72;
+    }
+
+    /* Tableau des transactions */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #2a5298;
+      color: #fff;
+    }
+
+    /* Statuts colorés */
+    .status {
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: bold;
+    }
+    .en-attente { background-color: orange; }
+    .en-traitement { background-color: dodgerblue; }
+    .valide { background-color: green; }
+    .dedouane { background-color: teal; }
+    .rejete { background-color: red; }
+    .bloque { background-color: gray; }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .step {
+      text-align: center;
+      flex: 1;
+      position: relative;
+    }
+
+    .step::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #ccc;
+      z-index: -1;
+    }
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #2a5298;
+      margin: 0 auto;
+      color: #fff;
+      line-height: 30px;
+      font-size: 14px;
+    }
+
+    /* Notifications */
+    .notifications {
+      background: #ffe;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    /* Messagerie */
+    .messagerie {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .messages {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .message {
+      margin: 5px 0;
+    }
+
+    .message.agent { color: #2a5298; }
+    .message.client { color: #333; }
+
+    /* Pied de page */
+    footer {
+      background-color: #2a5298;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ajouter une Transaction - Douanne App</h1>
+  </header>
+
+  <div class="container">
+    <!-- Formulaire -->
+    <form id="transactionForm">
+      <label for="id">ID Transaction</label>
+      <input type="text" id="id" required>
+
+      <label for="operation">Opération</label>
+      <select id="operation" required>
+        <option value="">-- Choisir --</option>
+        <option value="Déclaration">Déclaration</option>
+        <option value="Paiement">Paiement</option>
+        <option value="Mainlevée">Mainlevée</option>
+      </select>
+
+      <label for="montant">Montant</label>
+      <input type="number" id="montant" required>
+
+      <label for="status">Statut</label>
+      <select id="status" required>
+        <option value="en-attente">En attente</option>
+        <option value="en-traitement">En traitement</option>
+        <option value="valide">Validé</option>
+        <option value="dedouane">Dédouané</option>
+        <option value="rejete">Rejeté</option>
+        <option value="bloque">Bloqué</option>
+      </select>
+
+      <label for="documents">Documents associés</label>
+      <textarea id="documents" placeholder="Ex: DUM, quittance, bon à lever..."></textarea>
+
+      <label for="client">Client concerné</label>
+      <input type="text" id="client" placeholder="Nom du client">
+
+      <button type="submit">Ajouter la Transaction</button>
+    </form>
+
+    <!-- Liste des transactions -->
+    <h2>Transactions ajoutées</h2>
+    <table id="transactionsTable">
+      <tr>
+        <th>ID</th>
+        <th>Opération</th>
+        <th>Montant</th>
+        <th>Status</th>
+        <th>Documents</th>
+        <th>Client</th>
+      </tr>
+      <!-- Les transactions ajoutées apparaîtront ici -->
+    </table>
+
+    <!-- Timeline -->
+    <h2>Timeline (Étapes)</h2>
+    <div class="timeline">
+      <div class="step">
+        <div class="circle">1</div>
+        <p>Vérification</p>
+      </div>
+      <div class="step">
+        <div class="circle">2</div>
+        <p>Paiement</p>
+      </div>
+      <div class="step">
+        <div class="circle">3</div>
+        <p>Mainlevée</p>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="notifications" id="notifications">
+      <h3>Notifications</h3>
+      <p>Aucune notification pour le moment.</p>
+    </div>
+
+    <!-- Messagerie -->
+    <div class="messagerie">
+      <h3>Messagerie avec l’agent responsable</h3>
+      <div class="messages" id="messages"></div>
+      <input type="text" id="inputMessage" placeholder="Écrire un message...">
+      <button onclick="sendMessage()">Envoyer</button>
+    </div>
+  </div>
+
+  <!-- Pied de page -->
+  <footer>
+    <p>&copy; 2026 Douanne App - Tous droits réservés | Contact: support@douanneapp.com</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById("transactionForm");
+    const table = document.getElementById("transactionsTable");
+    const notifications = document.getElementById("notifications");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById("id").value;
+      const operation = document.getElementById("operation").value;
+      const montant = document.getElementById("montant").value;
+      const status = document.getElementById("status").value;
+      const documents = document.getElementById("documents").value;
+      const client = document.getElementById("client").value;
+
+      const row = table.insertRow();
+      row.insertCell(0).textContent = id;
+      row.insertCell(1).textContent = operation;
+      row.insertCell(2).textContent = montant + " $";
+
+      const statusCell = row.insertCell(3);
+      statusCell.innerHTML = `<span class="status ${status}">${status.replace("-", " ")}</span>`;
+
+      row.insertCell(4).textContent = documents;
+      row.insertCell(5).textContent = client;
+
+      notifications.innerHTML = `<h3>Notifications</h3><p>Transaction ${id} ajoutée avec statut "${status}".</p>`;
+
+      form.reset();
+    });
+
+    </script>
+  </body>
+</html>
+
+
+
+
