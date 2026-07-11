@@ -1,3 +1,188 @@
-la declaration 
-un formulaire de declarations des marchandises
-declarer votre marchandises en toute secrurité et transparence
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Déclaration Douanière</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
+    h2 { background: #f0f0f0; padding: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #eee; }
+    .actions button { margin-right: 5px; }
+  </style>
+</head>
+<body>
+
+<h1>Formulaire de Déclaration Douanière</h1>
+
+<!-- Informations générales -->
+<section>
+  <h2>Informations générales</h2>
+  <label>Type de déclaration :
+    <select>
+      <option>Importation</option>
+      <option>Exportation</option>
+      <option>Transit</option>
+    </select>
+  </label><br><br>
+  <label>Régime :
+    <select>
+      <option>Normal</option>
+      <option>Suspensif</option>
+    </select>
+  </label><br><br>
+  <label>Mode de transport :
+    <select>
+      <option>Maritime</option>
+      <option>Aérien</option>
+      <option>Terrestre</option>
+    </select>
+  </label>
+</section>
+
+<!-- Identité -->
+<section>
+  <h2>Identité du déclarant et du destinataire</h2>
+  <label>Déclarant : <input type="text" id="declarant"></label><br><br>
+  <label>Destinataire : <input type="text" id="destinataire"></label>
+</section>
+
+<!-- Marchandises -->
+<section>
+  <h2>Détails des marchandises</h2>
+  <table id="marchandises">
+    <thead>
+      <tr>
+        <th>Désignation</th>
+        <th>Code SH</th>
+        <th>Quantité</th>
+        <th>Valeur (USD)</th>
+        <th>Pays origine</th>
+        <th>Pays destination</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text"></td>
+        <td><input type="text" class="codeSH"></td>
+        <td><input type="number" class="quantite"></td>
+        <td><input type="number" class="valeur"></td>
+        <td><input type="text"></td>
+        <td><input type="text"></td>
+      </tr>
+    </tbody>
+  </table>
+  <button onclick="ajouterLigne()">Ajouter une ligne</button>
+</section>
+
+<!-- Pièces jointes -->
+<section>
+  <h2>Pièces jointes</h2>
+  <label><input type="checkbox"> Facture</label><br>
+  <label><input type="checkbox"> Certificat d'origine</label><br>
+  <label><input type="checkbox"> Licence</label>
+</section>
+
+<!-- Calcul automatique -->
+<section>
+  <h2>Calcul des droits et taxes</h2>
+  <button onclick="calculer()">Calculer</button>
+  <p>Droits de douane : <span id="douane">0</span> USD</p>
+  <p>TVA : <span id="tva">0</span> USD</p>
+  <p>Taxes d'accises : <span id="accises">0</span> USD</p>
+  <p>Redevances : <span id="redevances">0</span> USD</p>
+  <h3>Total à payer : <span id="total">0</span> USD</h3>
+</section>
+
+<!-- Pré-liquidation -->
+<section>
+  <h2>Pré-liquidation</h2>
+  <p>Affichage provisoire des droits et taxes avant soumission.</p>
+</section>
+
+<!-- Liste des déclarations -->
+<section>
+  <h2>Liste des déclarations</h2>
+  <label>Filtrer par statut :
+    <select id="filtreStatut" onchange="filtrer()">
+      <option>Tous</option>
+      <option>Brouillon</option>
+      <option>Soumis</option>
+      <option>Validé</option>
+      <option>Rejeté</option>
+    </select>
+  </label>
+  <input type="text" id="recherche" placeholder="Rechercher par DUM, client, code SH" onkeyup="filtrer()">
+  
+  <table id="declarations">
+    <thead>
+      <tr>
+        <th>DUM</th>
+        <th>Client</th>
+        <th>Code SH</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>12345</td>
+        <td>ABC SARL</td>
+        <td>0101</td>
+        <td>Brouillon</td>
+        <td class="actions">
+          <button>Voir détail</button>
+          <button>Modifier</button>
+          <button>Soumettre</button>
+          <button>Dupliquer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<script>
+function ajouterLigne() {
+  const tbody = document.querySelector("#marchandises tbody");
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td><input type="text"></td>
+                  <td><input type="text" class="codeSH"></td>
+                  <td><input type="number" class="quantite"></td>
+                  <td><input type="number" class="valeur"></td>
+                  <td><input type="text"></td>
+                  <td><input type="text"></td>`;
+  tbody.appendChild(tr);
+}
+
+function calculer() {
+  let totalValeur = 0;
+  document.querySelectorAll(".valeur").forEach(v => totalValeur += Number(v.value));
+  
+  let droitsDouane = totalValeur * 0.10; // exemple: 10%
+  let tva = totalValeur * 0.16;          // exemple: 16%
+  let accises = totalValeur * 0.05;      // exemple: 5%
+  let redevances = totalValeur * 0.02;   // exemple: 2%
+  
+  document.getElementById("douane").textContent = droitsDouane.toFixed(2);
+  document.getElementById("tva").textContent = tva.toFixed(2);
+  document.getElementById("accises").textContent = accises.toFixed(2);
+  document.getElementById("redevances").textContent = redevances.toFixed(2);
+  document.getElementById("total").textContent = (droitsDouane+tva+accises+redevances).toFixed(2);
+}
+
+function filtrer() {
+  const statut = document.getElementById("filtreStatut").value;
+  const recherche = document.getElementById("recherche").value.toLowerCase();
+  document.querySelectorAll("#declarations tbody tr").forEach(tr => {
+    const cells = tr.querySelectorAll("td");
+    const matchStatut = (statut==="Tous" || cells[3].textContent===statut);
+    const matchRecherche = Array.from(cells).some(td => td.textContent.toLowerCase().includes(recherche));
+    tr.style.display = (matchStatut && matchRecherche) ? "" : "none";
+  });
+}
+</script>
+
+</body>
+</html>
