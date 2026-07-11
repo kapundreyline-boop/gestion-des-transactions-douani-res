@@ -1,1 +1,258 @@
-calculs automatiquement
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Douanne App - Liquidation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      background-image: url(douane1.jpg);
+    }
+
+    header {
+      background-color: #2a5298;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+
+    h1 { margin: 0; }
+
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    section {
+      background: #eef;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: #2a5298;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover { background: #1e3c72; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #2a5298;
+      color: #fff;
+    }
+
+    footer {
+      background-color: #2a5298;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Liquidation - Douanne App</h1>
+  </header>
+
+  <div class="container">
+    <!-- Calculateur de droits -->
+    <section>
+      <h2>Calculateur de droits</h2>
+      <form id="calcForm">
+        <label for="valeur">Valeur CAF</label>
+        <input type="number" id="valeur" required>
+
+        <label for="origine">Origine</label>
+        <input type="text" id="origine">
+
+        <label for="regime">Régime de sortie</label>
+        <input type="text" id="regime">
+
+        <label for="code">Code SH</label>
+        <input type="text" id="code">
+
+        <button type="submit">Calculer</button>
+      </form>
+
+      <table id="calcTable">
+        <tr>
+          <th>Taux</th>
+          <th>Assiette</th>
+          <th>Montant</th>
+        </tr>
+        <!-- Résultats du calcul -->
+      </table>
+      <p id="total"></p>
+    </section>
+
+    <!-- Workflow de validation -->
+    <section>
+      <h2>Workflow de validation</h2>
+      <p>Agent → Superviseur → Validation finale → Signature électronique</p>
+      <button onclick="validerLiquidation()">Valider la liquidation</button>
+      <p id="workflowStatus"></p>
+    </section>
+
+    <!-- Génération PDF -->
+    <section>
+      <h2>Bulletin de liquidation</h2>
+      <button onclick="genererPDF()">Générer le bulletin PDF</button>
+      <p id="pdfStatus"></p>
+    </section>
+
+    <!-- Historique -->
+    <section>
+      <h2>Historique des liquidations</h2>
+      <table id="historiqueTable">
+        <tr>
+          <th>ID</th>
+          <th>Période</th>
+          <th>Agent</th>
+          <th>Montant</th>
+        </tr>
+        <!-- Historique rempli par l’utilisateur -->
+      </table>
+    </section>
+
+    <!-- Gestion des paiements -->
+    <section>
+      <h2>Gestion des paiements</h2>
+      <form id="paiementForm">
+        <label for="mode">Mode de paiement</label>
+        <select id="mode">
+          <option value="Espèces">Espèces</option>
+          <option value="Virement">Virement</option>
+          <option value="Mobile Money">Mobile Money</option>
+          <option value="Carte">Carte bancaire</option>
+        </select>
+
+        <label for="ref">Référence bancaire</label>
+        <input type="text" id="ref">
+
+        <label for="date">Date</label>
+        <input type="date" id="date">
+
+        <label for="montantPaiement">Montant</label>
+        <input type="number" id="montantPaiement">
+
+        <button type="submit">Enregistrer le paiement</button>
+      </form>
+
+      <table id="paiementTable">
+        <tr>
+          <th>Mode</th>
+          <th>Référence</th>
+          <th>Date</th>
+          <th>Montant</th>
+          <th>Déclarations liées</th>
+        </tr>
+      </table>
+    </section>
+
+    <!-- Suivi des créances -->
+    <section>
+      <h2>Suivi des créances</h2>
+      <p>Liste des déclarations impayées, relances automatiques par email/SMS, état des restes à couvrir.</p>
+      <table id="creancesTable">
+        <tr>
+          <th>ID Déclaration</th>
+          <th>Montant dû</th>
+          <th>Status</th>
+        </tr>
+        <!-- À compléter -->
+      </table>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Douanne App - Tous droits réservés | Contact: support@douanneapp.com</p>
+  </footer>
+
+  <script>
+    // Calculateur simple
+    document.getElementById("calcForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const valeur = parseFloat(document.getElementById("valeur").value);
+      const table = document.getElementById("calcTable");
+
+      // Exemple de calcul (à adapter)
+      const droitsDouane = valeur * 0.10;
+      const tva = valeur * 0.16;
+      const taxes = valeur * 0.05;
+
+      table.innerHTML = `
+        <tr><th>Taux</th><th>Assiette</th><th>Montant</th></tr>
+        <tr><td>10% Douane</td><td>${valeur}</td><td>${droitsDouane}</td></tr>
+        <tr><td>16% TVA</td><td>${valeur}</td><td>${tva}</td></tr>
+        <tr><td>5% Taxes</td><td>${valeur}</td><td>${taxes}</td></tr>
+      `;
+      document.getElementById("total").textContent = "Total: " + (droitsDouane + tva + taxes) + " $";
+    });
+
+    // Workflow
+    function validerLiquidation() {
+      document.getElementById("workflowStatus").textContent = "Liquidation validée et signée électroniquement.";
+    }
+
+    // Génération PDF (simulation)
+    function genererPDF() {
+      document.getElementById("pdfStatus").textContent = "Bulletin PDF généré (simulation).";
+    }
+
+    // Paiements
+    document.getElementById("paiementForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const mode = document.getElementById("mode").value;
+      const ref = document.getElementById("ref").value;
+      const date = document.getElementById("date").value;
+      const montant = document.getElementById("montantPaiement").value;
+
+      const table = document.getElementById("paiementTable");
+      const row = table.insertRow();
+      row.insertCell(0).textContent = mode;
+      row.insertCell(1).textContent = ref;
+      row.insertCell(2).textContent = date;
+      row.insertCell(3).textContent = montant + " $";
+      row.insertCell(4).textContent = "Déclaration(s) liée(s)";
+    });
+  </script>
+</body>
+</html>
+
